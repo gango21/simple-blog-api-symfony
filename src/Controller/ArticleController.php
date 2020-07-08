@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use JMS\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,7 +24,7 @@ class ArticleController extends AbstractController
                         'id' => $id   
                     ]);
         
-        $data = $serialize->serialize($article, 'json');
+        $data = $serialize->serialize($article, 'json', SerializationContext::create()->setGroups(array('detail')));
 
         $response = new Response($data);
         $response->headers->set('Content-Type', 'application/json');
@@ -48,13 +49,13 @@ class ArticleController extends AbstractController
 
 
      /**
-     * @Route("/articleslist", methods={"GET"}, name="articles_list")
+     * @Route("/articles", methods={"GET"}, name="articles_list")
      */
 
     public function listAction(SerializerInterface $serialize)
     {
        $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
-       $data = $serialize->serialize($articles, 'json');
+       $data = $serialize->serialize($articles, 'json', SerializationContext::create()->setGroups(array('list')));
 
        $response = new Response($data);
        $response->headers->set('Content-Type', 'application/json');
