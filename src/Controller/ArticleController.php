@@ -14,29 +14,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ArticleController extends AbstractController
 {
     /**
-     * @Route("/articles/{id}", name="article_show")
-     */
-    // public function showAction($id, SerializerInterface $serialize)
-    // {
-    //     $repository = $this->getDoctrine()->getRepository(Article::class); 
-    //                 $article = $repository->findOneBy([
-    //                     'id' => $id   
-    //                 ]);
-        
-    //     $data = $serialize->serialize($article, 'json', SerializationContext::create()->setGroups(array('detail')));
-
-    //     $response = new Response($data);
-    //     $response->headers->set('Content-Type', 'application/json');
-
-    //     return $response;
-    // }
-
-    /**
      * @Route("/articles/create", methods={"POST"}, name="article_create")
      */
 
-     public function createAction(Request $request, SerializerInterface $serialize, EntityManagerInterface $manager)
-     {
+    public function createAction(Request $request, SerializerInterface $serialize, EntityManagerInterface $manager)
+    {
         $data = $request->getContent();
         $article = $serialize->deserialize($data, Article::class, 'json');
 
@@ -44,8 +26,25 @@ class ArticleController extends AbstractController
         $manager->flush();
 
         return new Response('', Response::HTTP_CREATED);
-     }
+    }
 
+     /**
+     * @Route("/articles/{id}", name="article_show")
+     */
+    public function showAction($id, SerializerInterface $serialize)
+    {
+        $repository = $this->getDoctrine()->getRepository(Article::class); 
+                    $article = $repository->findOneBy([
+                        'id' => $id   
+                    ]);
+        
+        $data = $serialize->serialize($article, 'json', SerializationContext::create()->setGroups(array('detail')));
+
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
 
      /**
      * @Route("/articles", methods={"GET"}, name="articles_list")
