@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-
 use App\Entity\Article;
 use JMS\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,20 +16,20 @@ class ArticleController extends AbstractController
     /**
      * @Route("/articles/{id}", name="article_show")
      */
-    public function showAction($id, SerializerInterface $serialize)
-    {
-        $repository = $this->getDoctrine()->getRepository(Article::class); 
-                    $article = $repository->findOneBy([
-                        'id' => $id   
-                    ]);
+    // public function showAction($id, SerializerInterface $serialize)
+    // {
+    //     $repository = $this->getDoctrine()->getRepository(Article::class); 
+    //                 $article = $repository->findOneBy([
+    //                     'id' => $id   
+    //                 ]);
         
-        $data = $serialize->serialize($article, 'json', SerializationContext::create()->setGroups(array('detail')));
+    //     $data = $serialize->serialize($article, 'json', SerializationContext::create()->setGroups(array('detail')));
 
-        $response = new Response($data);
-        $response->headers->set('Content-Type', 'application/json');
+    //     $response = new Response($data);
+    //     $response->headers->set('Content-Type', 'application/json');
 
-        return $response;
-    }
+    //     return $response;
+    // }
 
     /**
      * @Route("/articles/create", methods={"POST"}, name="article_create")
@@ -54,14 +53,12 @@ class ArticleController extends AbstractController
 
     public function listAction(SerializerInterface $serialize)
     {
-       $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
-       $data = $serialize->serialize($articles, 'json', SerializationContext::create()->setGroups(array('list')));
+        $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
+        $data = $serialize->serialize($articles, 'json', SerializationContext::create()->setGroups(array('list')));
 
-       $response = new Response($data);
-       $response->headers->set('Content-Type', 'application/json');
-       
-       return $response;
-       
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
 
+        return $response;
     }
 }
