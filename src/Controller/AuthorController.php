@@ -16,13 +16,12 @@ class AuthorController extends AbstractController
     /**
      * @Route("/author/{id}", name="author_show")
      */
-    public function showAction(SerializerInterface $serializer){
-        $article = $this->getDoctrine()->getRepository(Article::class)->findOneById(1);
+    public function showAction(SerializerInterface $serializer, $id){
 
-        $author = new Author();
-        $author->setFullname('Prénom Nom');
-        $author->setBiography('Ma super biographie');
-        $author->getArticles()->add($article);
+        $repository = $this->getDoctrine()->getRepository(Author::class); 
+                    $author = $repository->findOneBy([
+                        'id' => $id   
+                    ]);
 
         $data = $serializer->serialize($author, 'json');
 
